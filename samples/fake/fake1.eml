@@ -1,0 +1,9 @@
+From: "PayPal Support" <support@paypa1-secure.com>
+Reply-To: helpdesk@gmail-claims.ru
+Return-Path: <bounce@mailer.xyz>
+To: you@example.com
+Subject: Urgent: verify your account now
+Authentication-Results: mx.example.com; spf=fail; dkim=none; dmarc=fail
+Content-Type: text/html
+
+<html><body>Click <a href="http://paypa1-secure.com/login">paypal.com</a> now!</body></html>
