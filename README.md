@@ -8,7 +8,7 @@ python3 main.py samples/fake/fake1.eml
 
 ## Status
 - [x] Email parser
-- [ ] SPF/DKIM/DMARC checks
+- [x] SPF/DKIM/DMARC checks
 - [ ] URL analysis
 - [ ] Attachment hashing
 - [ ] Risk scoring

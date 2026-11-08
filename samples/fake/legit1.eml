@@ -1,0 +1,8 @@
+From: "PayPal" <service@paypal.com>
+Return-Path: <bounce@mail.paypal.com>
+To: you@example.com
+Subject: Your receipt
+Authentication-Results: mx.example.com; spf=pass; dkim=pass; dmarc=pass
+Content-Type: text/html
+
+<html><body>Thanks for your payment.</body></html>

@@ -1,4 +1,15 @@
 import re
+from email.utils import parseaddr
+
+BRANDS = {
+    "paypal": ["paypal.com"],
+    "amazon": ["amazon.com", "amazon.in"],
+    "microsoft": ["microsoft.com", "outlook.com"],
+    "google": ["google.com", "gmail.com"],
+    "apple": ["apple.com", "icloud.com"],
+    "sbi": ["sbi.co.in", "onlinesbi.sbi"],
+    "hdfc": ["hdfcbank.com", "hdfcbank.net"],
+}
 
 def check_auth_results(auth_header):
     """Read spf/dkim/dmarc verdicts from the Authentication-Results header."""
@@ -57,11 +68,30 @@ def check_domain_mismatch(from_, reply_to, return_path):
     return results
 
 def check_display_name(from_):
-    """Flag if the display name claims a brand the domain doesn't match."""
-    # TODO: a small dict like {"paypal": "paypal.com", ...}
-    pass
+    """Flag if the display name claims a brand the sending domain doesn't match."""
+    if not from_:
+        return []
+    display_name, address = parseaddr(str(from_))
+    domain = get_domain(address)
+    if not display_name or not domain:
+        return []
+
+    name_lower = display_name.lower()
+    for brand, legit_domains in BRANDS.items():
+        if re.search(rf"\b{brand}\b", name_lower):
+            if not any(domains_match(domain, d) for d in legit_domains):
+                return [{
+                    "check": "display_name_spoof",
+                    "result": "spoof",
+                    "points": 25,
+                    "detail": f'Display name "{display_name}" claims {brand}, but sent from {domain}',
+                }]
+    return []
 
 def run_auth_checks(data):
-    """Run everything on the dict returned by parse_eml."""
-    # TODO: combine all results into one list
-    pass
+    """Run every authentication check on the dict returned by parse_eml."""
+    findings = []
+    findings += check_auth_results(data["auth"])
+    findings += check_domain_mismatch(data["from"], data["reply_to"], data["return_path"])
+    findings += check_display_name(data["from"])
+    return findings
