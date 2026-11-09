@@ -6,6 +6,7 @@ def parse_eml(path):
     with open(path, "rb") as f:
         msg = BytesParser(policy=policy.default).parse(f)
     html_part = msg.get_body(("html",))
+    text_part = msg.get_body(("plain",))
 
     attachments = []
     for part in msg.iter_attachments():
@@ -24,6 +25,7 @@ def parse_eml(path):
         "subject": msg["Subject"],
         "auth": msg["Authentication-Results"],
         "html": html_part.get_content() if html_part else "",
+        "text": text_part.get_content() if text_part else "",
         "attachments": attachments,
     }
 

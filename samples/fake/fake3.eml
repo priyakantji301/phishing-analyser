@@ -1,0 +1,7 @@
+From: "Support Team" <help@example-corp.com>
+To: you@example.com
+Subject: URGENT!!! Your account will be suspended
+Authentication-Results: mx.example.com; spf=pass; dkim=pass; dmarc=pass
+Content-Type: text/html
+
+<html><body><p>Dear customer,</p><p>We detected unusual activity on your account. Verify your identity immediately.</p><form action="http://example.com/login"><input type="text" name="user"><input type="password" name="pw"></form></body></html>

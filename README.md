@@ -12,3 +12,4 @@ python3 main.py samples/fake/fake1.eml
 - [x] URL analysis
 - [x] Attachment hashing
 - [ ] Risk scoring
+- [x] Content heuristics
