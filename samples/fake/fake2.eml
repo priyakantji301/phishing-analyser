@@ -1,0 +1,30 @@
+From: "Accounts Team" <billing@example-corp.com>
+To: you@example.com
+Subject: Invoice attached
+Authentication-Results: mx.example.com; spf=pass; dkim=pass; dmarc=pass
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8033626060163397724=="
+
+--===============8033626060163397724==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Please see the attached invoice.
+
+--===============8033626060163397724==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice.pdf.exe"
+MIME-Version: 1.0
+
+aGFybWxlc3MgdGV4dCwgbm90IGEgcmVhbCBwcm9ncmFt
+
+--===============8033626060163397724==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="report.docm"
+MIME-Version: 1.0
+
+aGFybWxlc3MgdGV4dCwgbm90IGEgcmVhbCBtYWNybw==
+
+--===============8033626060163397724==--

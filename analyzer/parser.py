@@ -1,3 +1,4 @@
+import hashlib
 from email import policy
 from email.parser import BytesParser
 
@@ -5,6 +6,17 @@ def parse_eml(path):
     with open(path, "rb") as f:
         msg = BytesParser(policy=policy.default).parse(f)
     html_part = msg.get_body(("html",))
+
+    attachments = []
+    for part in msg.iter_attachments():
+        payload = part.get_payload(decode=True) or b""
+        attachments.append({
+            "filename": part.get_filename() or "(unnamed)",
+            "content_type": part.get_content_type(),
+            "size": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        })
+
     return {
         "from": msg["From"],
         "reply_to": msg["Reply-To"],
@@ -12,7 +24,7 @@ def parse_eml(path):
         "subject": msg["Subject"],
         "auth": msg["Authentication-Results"],
         "html": html_part.get_content() if html_part else "",
-        "attachments": [p.get_filename() for p in msg.iter_attachments()],
+        "attachments": attachments,
     }
 
 if __name__ == "__main__":
