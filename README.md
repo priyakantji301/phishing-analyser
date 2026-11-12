@@ -13,3 +13,4 @@ python3 main.py samples/fake/fake1.eml
 - [x] Attachment hashing
 - [x] Risk scoring
 - [x] Content heuristics
+- [x] Web interface (run: uvicorn app:app --reload)

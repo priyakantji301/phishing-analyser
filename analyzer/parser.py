@@ -2,9 +2,8 @@ import hashlib
 from email import policy
 from email.parser import BytesParser
 
-def parse_eml(path):
-    with open(path, "rb") as f:
-        msg = BytesParser(policy=policy.default).parse(f)
+def parse_eml_bytes(raw):
+    msg = BytesParser(policy=policy.default).parsebytes(raw)
     html_part = msg.get_body(("html",))
     text_part = msg.get_body(("plain",))
 
@@ -28,6 +27,10 @@ def parse_eml(path):
         "text": text_part.get_content() if text_part else "",
         "attachments": attachments,
     }
+
+def parse_eml(path):
+    with open(path, "rb") as f:
+        return parse_eml_bytes(f.read())
 
 if __name__ == "__main__":
     import sys, pprint
