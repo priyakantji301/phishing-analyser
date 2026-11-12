@@ -1,0 +1,7 @@
+From: "Friend" <friend@example.org>
+To: you@example.com
+Subject: Fwd: holiday photos
+Authentication-Results: mx.example.com; spf=fail; dkim=fail; dmarc=fail
+Content-Type: text/plain
+
+Here are the photos from the trip.

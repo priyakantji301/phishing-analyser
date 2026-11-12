@@ -1,38 +1,33 @@
 import sys
 from analyzer.parser import parse_eml
-from analyzer.auth_checks import run_auth_checks
-from analyzer.url_checks import run_url_checks
-from analyzer.attachments import run_attachment_checks
-from analyzer.heuristics import run_content_checks
-
-def show(title, findings):
-    print(f"{title}:")
-    if not findings:
-        print("  (nothing found)")
-    for f in findings:
-        marker = "!" if f["points"] > 0 else " "
-        print(f"  [{marker}] {f['detail']}  (+{f['points']})")
-    print()
+from analyzer.scoring import analyze
 
 def main():
     if len(sys.argv) != 2:
         print("Usage: python3 main.py <path-to-email.eml>")
         sys.exit(1)
 
-    data = parse_eml(sys.argv[1])
-    auth = run_auth_checks(data)
-    urls = run_url_checks(data)
-    atts = run_attachment_checks(data)
-    content = run_content_checks(data)
+    r = analyze(parse_eml(sys.argv[1]))
 
-    print(f"\nSubject: {data['subject']}")
-    print(f"From:    {data['from']}\n")
-    show("Authentication", auth)
-    show("URLs", urls)
-    show("Attachments", atts)
-    show("Content", content)
-    total = sum(f["points"] for f in auth + urls + atts + content)
-    print(f"Total risk points: {total}")
+    print(f"\nSubject: {r['subject']}")
+    print(f"From:    {r['from']}\n")
+
+    for name, sec in r["sections"].items():
+        print(f"{name}  ({sec['score']} pts, raw {sec['raw']})")
+        if not sec["findings"]:
+            print("  (nothing found)")
+        for f in sec["findings"]:
+            marker = "!" if f["points"] > 0 else " "
+            print(f"  [{marker}] {f['detail']}  (+{f['points']})")
+        print()
+
+    print(f"VERDICT: {r['verdict'].upper()}  ({r['total']} points)")
+    if r["override_note"]:
+        print(f"Note: {r['override_note']}")
+    if r["top_reasons"]:
+        print("\nTop reasons:")
+        for i, f in enumerate(r["top_reasons"], 1):
+            print(f"  {i}. {f['detail']} (+{f['points']})")
 
 if __name__ == "__main__":
     main()
